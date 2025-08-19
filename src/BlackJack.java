@@ -1,9 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Random.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 
 public class BlackJack {
@@ -17,8 +19,61 @@ public class BlackJack {
     int dealerSum; // tract the dealer sum
     int getDealerAceCount; // tract the ace to switch it to 1 or eleven value
 
+    // Player
+    ArrayList<Card> playerHand;
+    int playerSum;
+    int playerAceCount;
+
+    //window
+    int boardWith =600;
+    int bordHeight= boardWith;
+
+    //Size of the cards in the panel
+    int cardWidth=110; // ration should 1/1.4
+    int cardHeight=154;
+
+
+    JFrame frame = new JFrame("Black Jack"); // the window
+    JPanel gamePanel = new JPanel(){
+        @Override
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            //draw hidden Card
+            //Image hiddenCardImg = new ImageIcon(getClass().getResource("./cards/BACK.png")).getImage();
+            Image hiddenCardImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("./cards/BACK.png"))).getImage();
+            g.drawImage(hiddenCardImg, 20, 20 , cardWidth, cardHeight,null);
+        }
+    };
+    JPanel buttonPanel = new JPanel();
+    JButton hitButton = new JButton("Hit");
+    JButton stayButton = new JButton("Stay");
+
+
     BlackJack(){
         startGame();
+
+        //Window or Frame
+        frame.setVisible(true);
+        frame.setSize(boardWith,bordHeight);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Background Panel
+        gamePanel.setLayout(new BorderLayout());
+        gamePanel.setBackground(new Color(53,101,77));
+        frame.add(gamePanel);
+
+        //Button Panel
+        hitButton.setFocusable(false);
+        buttonPanel.add(hitButton);
+        stayButton.setFocusable(false);
+        buttonPanel.add(stayButton);
+       // frame.add(buttonPanel);
+        // Specify border layout so that it will appear at the bottom
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+
     }
 
     //Starting the BlackJack game
@@ -49,6 +104,24 @@ public class BlackJack {
         System.out.println(dealerHand);
         System.out.println(dealerSum);
         System.out.println(getDealerAceCount);
+
+        //Player
+        playerHand = new ArrayList<Card>();
+        playerSum = 0;
+        playerAceCount=0;
+
+        //loop 2 for player cards
+        for (int i=0; i<2 ; i++){
+            card = deck.removeLast();
+            playerSum += card.getValue();
+            playerAceCount += card.isAce() ? 1 : 0;
+            playerHand.add(card);
+        }
+        System.out.println("Player");
+        System.out.println(playerHand);
+        System.out.println(playerSum);
+        System.out.println(playerAceCount);
+
     }
 
     // Creating the deck
