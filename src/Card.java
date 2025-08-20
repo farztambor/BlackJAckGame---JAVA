@@ -22,6 +22,10 @@ public class Card {
         return Integer.parseInt(value); //2-10
     }
 
+    public String getImagePath(){
+        return "./cards/" + toString() + ".png";
+    }
+
     public boolean isAce(){
         return value.equals("A");
     }

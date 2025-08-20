@@ -38,10 +38,27 @@ public class BlackJack {
         @Override
         public void paintComponent(Graphics g){
             super.paintComponent(g);
-            //draw hidden Card
-            //Image hiddenCardImg = new ImageIcon(getClass().getResource("./cards/BACK.png")).getImage();
-            Image hiddenCardImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("./cards/BACK.png"))).getImage();
-            g.drawImage(hiddenCardImg, 20, 20 , cardWidth, cardHeight,null);
+            try{
+                //draw hidden Card
+                //Image hiddenCardImg = new ImageIcon(getClass().getResource("./cards/BACK.png")).getImage();
+                Image hiddenCardImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("./cards/BACK.png"))).getImage();
+                g.drawImage(hiddenCardImg, 20, 20 , cardWidth, cardHeight,null);
+                //draw dealers hand
+                for (int i=0; i<dealerHand.size(); i++) {
+                    Card card = dealerHand.get(i);
+                    Image cardImage = new ImageIcon(Objects.requireNonNull(getClass().getResource(card.getImagePath()))).getImage();
+                    g.drawImage(cardImage, cardWidth + 25 + (cardWidth+ 5)*i,20, cardWidth , cardHeight,null);
+                }
+                //draw players card
+                for(int i=0; i<playerHand.size(); i++){
+                    Card card = playerHand.get(i);
+                    Image cardImage = new ImageIcon(Objects.requireNonNull(getClass().getResource(card.getImagePath()))).getImage();
+                    g.drawImage(cardImage, 20 + (cardWidth+ 5)*i,320, cardWidth , cardHeight,null);
+                }
+
+            } catch (Exception e ){
+                e.printStackTrace();
+            }
         }
     };
     JPanel buttonPanel = new JPanel();
@@ -73,6 +90,17 @@ public class BlackJack {
         // Specify border layout so that it will appear at the bottom
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
+        hitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    Card card = deck.removeLast();
+                    playerSum += card.getValue();
+                    playerAceCount += card.isAce() ? 1:0;
+                    playerHand.add(card);
+                    gamePanel.repaint(); // render again the image
+                }
+            });
+        gamePanel.repaint(); //  render again the image
 
     }
 
